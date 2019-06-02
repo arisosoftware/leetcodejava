@@ -1,6 +1,7 @@
 package poc;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 public class SolutionReviewer {
@@ -25,12 +26,12 @@ public class SolutionReviewer {
 
 		StandardSolution standSolution = new StandardSolution();
 
-		int max = 100;
+		int max = 50;
 		int min = 1;
 		Random rand = new Random();
 		boolean testNext = true;
 		int round = 1;
-		for (int r = 0; r < 1000 && testNext; r++) {
+		for (int r = 0; r < 2000 && testNext; r++) {
 			int arraylen = rand.nextInt((max - min) + 1) / 2 + min;
 			AnswerSheet data = new AnswerSheet(arraylen, rand, min, max);
 			if (r == 0) {
@@ -41,7 +42,7 @@ public class SolutionReviewer {
 			data.stand = standSolution.twoSum(data.inputNum, data.target);
 			if (data.stand != null) {
 				data.tester = answerSolution.twoSum(data.inputNum, data.target);
-			  
+
 				round++;
 				if (data.tester != null) {
 					for (int v = 0; v < data.stand.length; v++) {
@@ -70,26 +71,51 @@ class AnswerSheet {
 	public int stand[];
 
 	public AnswerSheet(int arraylen, Random rnd, int min, int max) {
+
 		inputNum = new int[arraylen];
+
 		for (int i = 0; i < arraylen; i++) {
 			int randomNum = rnd.nextInt((max - min) + 1) + min;
-
 			inputNum[i] = randomNum;
+			if (i > 0) {
+				inputNum[i] = inputNum[i] + inputNum[i - 1];
+			}
 		}
-		Arrays.sort(inputNum);
-		target = rnd.nextInt((max - min) + 1) + min;
+
+		// Arrays.sort(inputNum);
+		int index1 = rnd.nextInt(arraylen);
+		if (index1 == arraylen)
+			index1 = arraylen - 1;
+		int index2 = arraylen - index1;
+		if (index2 == arraylen)
+			index2 = arraylen - 1;
+
+		// System.out.printf("%d %d %d \n", index1, index2, arraylen);
+		target = inputNum[index1] + inputNum[index2];
+		boolean changed = false;
+		do {
+			changed = false;
+			for (int v0 = 0; v0 < arraylen; v0++) {
+				for (int v1 = v0 + 1; v1 < arraylen; v1++) {
+					if (inputNum[v0] + inputNum[v1] == target && (v1 != index1 && v1 != index2)) {
+						inputNum[v1] = inputNum[v1] + 1;
+						changed = true;
+					}
+				}
+			}
+		} while (changed);
+
 	}
-	
-	public void ReportToConsole(int testRound)
-	{
-		
+
+	public void ReportToConsole(int testRound) {
+
 		System.out.printf("Test report %d \n", testRound);
-		
+
 		System.out.println("Input ");
 		for (int pp = 0; pp < inputNum.length; pp++) {
 			System.out.printf("%d ", inputNum[pp]);
 		}
-		System.out.printf("Tarage %d \n ", target);
+		System.out.printf("\nTarage %d \n ", target);
 		System.out.println("Answer should be ");
 		for (int pp = 0; pp < stand.length; pp++) {
 			System.out.printf("%d ", stand[pp]);
@@ -108,6 +134,5 @@ class AnswerSheet {
 		}
 
 	}
-	
-	
+
 }

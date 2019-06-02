@@ -4,18 +4,21 @@ import java.util.HashMap;
 
 public class StandardSolution {
 
-    public int[] twoSum(int[] nums, int target) {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            if (map.containsKey(target - nums[i])) {
-                return new int[] {map.get(target - nums[i]), i};
-            }
-            map.put(nums[i], i);
-        }
-        return null;
-    }
-    
-     
+	public int[] twoSum(int[] nums, int target) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			int mate = target - nums[i];
+			if (mate > 0) {
+				if (map.containsKey(mate)) {
+					return new int[] { map.get(mate), i };
+				}
+				map.put(nums[i], i);
+			}
+
+		}
+		return null;
+	}
+
 }
 
 //
