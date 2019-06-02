@@ -1,20 +1,45 @@
 package poc;
 
-import java.util.HashMap;
+import java.util.Arrays;
+ 
 
 public class Solution {
-	 /**
-     * one pass
-     * 要注意map.put要放在for末尾，对于case[3, 3], target=6的情况，如果放在开头会覆盖第一个3
-     */
-    public int[] twoSum2(int[] nums, int target) {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            if (map.containsKey(target - nums[i])) {
-                return new int[] {map.get(target - nums[i]), i};
-            }
-            map.put(nums[i], i);
-        }
-        return null;
-    }
+	 
+	  public int[] twoSum(int[] nums, int target) {
+	        int[] copy = Arrays.copyOf(nums, nums.length);
+	        
+	        Arrays.sort(nums);
+	        int[] ans = new int[2];
+	        int lo = 0, hi = nums.length - 1;
+	        while (lo < hi) {
+	            if(nums[lo] + nums[hi] == target) {
+	                ans[0] = nums[lo]; 
+	                ans[1] = nums[hi];
+	                break;
+	           }
+	            else if (nums[lo] + nums[hi] < target) lo++;
+	            else hi--;
+	        }
+	        
+	        //Just search the elemnt's original indices (before sorting)
+	        int remaining = -1;
+	        int i=0, answer[] = new int[2];
+	        for(i=0; i<copy.length; i++) {
+	            if(copy[i] == ans[0] || copy[i] == ans[1]) {
+	                answer[0] = i;
+	                remaining = (copy[i++] == ans[0]) ? ans[1] : ans[0];
+	                break;
+	            } 
+	        }
+	        
+	        for(; i<copy.length; i++) {
+	            if (copy[i] == remaining){
+	                answer[1] = i;
+	                break;
+	            }   
+	        }
+	        
+	        return answer;
+	        
+	    }
 }
