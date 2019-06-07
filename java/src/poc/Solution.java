@@ -17,7 +17,7 @@ public class Solution {
 
 			Integer mate = target - nums[v0];
 			if ((mate > 0) && checkedlist.containsKey(mate)) {
-				int[] answer = new int[] { v0, checkedlist.get(mate) };
+				int[] answer = new int[] { checkedlist.get(mate) , v0 };
 				return answer;
 			} else {
 				checkedlist.put(nums[v0], v0);
